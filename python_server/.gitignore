@@ -12,7 +12,6 @@ venv/
 *.log
 pip-log.txt
 pip-delete-this-directory.txt
-requirements.txt
 
 # IDE files
 .vscode/
