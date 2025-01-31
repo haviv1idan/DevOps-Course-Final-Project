@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env
+.venv/
+
+# Dependency files
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+requirements.txt
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# MacOS specific
+.DS_Store
+
+# PyCharm
+*.pyc
+*.pyo
+*.pyd
+venv/
+*.swp
+
+# FastAPI & Uvicorn logs
+logs/
+*.log
+
+# Cache
+.cache/
+*.sqlite3
