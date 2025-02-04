@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from typing import Dict, List
-from requests import save_user_name, get_all_questions, get_random_questions, check_answers
+from questions import Question
+from api import save_user_name, get_all_questions
 
 app = FastAPI()
 
@@ -13,25 +14,18 @@ def create_user(name: str):
 @app.get("/questions/")
 def get_questions():
     """Returns all trivia questions."""
-    return get_all_questions()
+    return [i.__str__ for i in get_all_questions()]
 
 @app.get("/questions/random/")
-def get_random(n: int):
+def get_random(n: int) -> list[Question]:
     """Returns `n` random questions from the question bank."""
-    return get_random_questions(n)
+    return [get_all_questions().get_random_question() for i in range(n)]
 
-@app.post("/answers/")
-def submit_answers(answers: List[Dict[str, int]]):
-    """Checks the user's answers and returns the number of correct responses.
-    
-    Expected JSON format:
-    [
-        {"question_id": 1, "answer_index": 0},
-        {"question_id": 3, "answer_index": 2}
-    ]
-    """
-    num_correct = check_answers(answers)
-    return {"correct_answers": num_correct}
+@app.post("/check_answer/")
+def submit_answers(answer: str, question: Question):
+    """Checks the user's answers and returns the number of correct responses."""
+    message = "Correct!" if question.check_answer(answer) else "Incorrct!"
+    return {"message": message}
 
 
 if __name__ == "__main__":
