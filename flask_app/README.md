@@ -16,3 +16,10 @@ open browser with the url: https://localhost:5000 and try this paths:
 - https://localhost:5000/questions
 - https://localhost:5000/questions/1
 
+
+## using docker
+```bash
+docker build -t flask_app:latest .
+
+docker run --name flask_app -p 5000:5000 -t flask_app:latest
+```

@@ -7,7 +7,7 @@ basicConfig(level=DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(mess
 class API:
 
     def __init__(self, url: str = None):
-        self.url = url or "http://localhost:8000"
+        self.url = url or "http://python_server:8000"
         self.logger = getLogger("API")
 
     def get_questions(self, num: int = 0) -> list[dict]:
