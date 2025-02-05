@@ -1,32 +1,16 @@
 from fastapi import FastAPI, HTTPException
-from typing import Dict, List
-from questions import Question
-from api import save_user_name, get_all_questions
+from questions import Questions
+from trivia_db import questions_list
 
 app = FastAPI()
-
-@app.post("/user/")
-def create_user(name: str):
-    """Stores the user's name and returns a success message."""
-    save_user_name(name)
-    return {"message": f"Welcome, {name}!"}
+questions = Questions(questions_list)
 
 @app.get("/questions/")
-def get_questions():
-    """Returns all trivia questions."""
-    return [i.__str__ for i in get_all_questions()]
-
-@app.get("/questions/random/")
-def get_random(n: int) -> list[Question]:
+def get_random(num: int = 0) -> list[dict]:
     """Returns `n` random questions from the question bank."""
-    return [get_all_questions().get_random_question() for i in range(n)]
-
-@app.post("/check_answer/")
-def submit_answers(answer: str, question: Question):
-    """Checks the user's answers and returns the number of correct responses."""
-    message = "Correct!" if question.check_answer(answer) else "Incorrct!"
-    return {"message": message}
-
+    if num == 0:
+        return questions.get_all_questions()
+    return questions.get_random_questions(num)
 
 if __name__ == "__main__":
     import uvicorn
