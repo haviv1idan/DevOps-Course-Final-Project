@@ -22,7 +22,6 @@ run:
 docker run -itd smee-client:TOKEN
 ```
 
-
 ## Jenkins configuration
 create Jenkins multibranch pipeline
 
