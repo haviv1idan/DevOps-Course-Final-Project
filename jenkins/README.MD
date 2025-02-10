@@ -16,6 +16,11 @@ Edit the Dockerfile and create a new token word and the smee url
 ```bash
 docker build -t smee-client:<TOKEN> .
 ```
+## Run smee container
+run:
+```
+docker run -itd --network host --restart always smee-client:<NAME>
+```
 
 ## Jenkins configuration
 create Jenkins multibranch pipeline
