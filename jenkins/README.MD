@@ -19,7 +19,7 @@ docker build -t smee-client:<TOKEN> .
 ## Run smee container
 run:
 ```
-docker run -itd smee-client:TOKEN
+docker run -itd --network host --restart always smee-client:<NAME>
 ```
 
 ## Jenkins configuration
