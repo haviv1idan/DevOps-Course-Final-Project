@@ -1,9 +1,27 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11-alpine'
+            args '--user root'
+        }
+    }
+
     stages {
-        stage('Example') {
+        stage('Checkout Repository') {
             steps {
-                echo 'Hello World'
+                checkout scm
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip install flake8'
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh 'flake8 --exclude venv,python_server/trivia_db.py'
             }
         }
     }
