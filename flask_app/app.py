@@ -27,6 +27,8 @@ def questions_num(num):
 def home():
     if request.method == 'POST':
         num_questions = int(request.form.get('num_questions'))
+        if num_questions == 0:
+            num_questions = len(api.get_questions())
         session['questions'] = sample(
             api.get_questions(num_questions), num_questions)
         session['current_question'] = 0

@@ -11,6 +11,7 @@ class API:
 
     def __init__(self, url: str = None):
         self.url = url or "http://python_server:8000"
+        # self.url = url or "http://127.0.0.1:8000"
         self.logger = getLogger("API")
 
     def get_questions(self, num: int = 0) -> list[dict]:
