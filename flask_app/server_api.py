@@ -2,7 +2,9 @@ from logging import basicConfig, getLogger, DEBUG
 from requests import get
 from curlify import to_curl
 
-basicConfig(level=DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+basicConfig(level=DEBUG)
+
 
 class API:
 
@@ -13,7 +15,7 @@ class API:
     def get_questions(self, num: int = 0) -> list[dict]:
         url = f"{self.url}/questions/"
         self.logger.info(f"Sending GET request to {url}")
-        
+
         if not num:
             response = get(url)
         else:
@@ -22,4 +24,3 @@ class API:
         self.logger.info(to_curl(response.request))
         self.logger.info(f"Response: {response.text}")
         return response.json()
-    

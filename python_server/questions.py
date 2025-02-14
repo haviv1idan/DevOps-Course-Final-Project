@@ -1,4 +1,3 @@
-from random import choice
 import random
 
 
@@ -9,7 +8,7 @@ class Questions:
 
     def get_all_questions(self) -> list[dict]:
         return self.questions
-    
+
     def get_random_questions(self, n: int) -> list[dict]:
         """Returns `n` random questions from the question list."""
         if n >= len(self.questions):
