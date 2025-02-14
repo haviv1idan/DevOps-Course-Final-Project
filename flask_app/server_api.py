@@ -1,6 +1,7 @@
 from logging import basicConfig, getLogger, DEBUG
 from requests import get
 from curlify import to_curl
+from json import dumps
 
 logging_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 basicConfig(level=DEBUG)
@@ -22,5 +23,6 @@ class API:
             response = get(url, params={"num": num})
 
         self.logger.info(to_curl(response.request))
-        self.logger.info(f"Response: {response.text}")
-        return response.json()
+        response = response.json()
+        self.logger.info(f"Response: {dumps(response, indent=4)}")
+        return response

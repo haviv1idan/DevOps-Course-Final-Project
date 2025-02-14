@@ -4,14 +4,14 @@
     <title>Trivia Game</title>
 </head>
 <body>
-    <h1>Trivia Question</h1>
-    <form action="/result" method="post">
-        <p>What is the capital of France?</p>
-        <input type="radio" name="answer" value="Paris" required> Paris<br>
-        <input type="radio" name="answer" value="London"> London<br>
-        <input type="radio" name="answer" value="Berlin"> Berlin<br>
-        <input type="radio" name="answer" value="Rome"> Rome<br><br>
-        <button type="submit">Submit Answer</button>
+    <h1>Question {{ question_number }} of {{ total }}</h1>
+    <form action="/game" method="post">
+        <p>{{ question.question }}</p>
+        {% for option in question.options %}
+            <input type="radio" name="answer" value="{{ option }}" required> {{ option }}<br>
+        {% endfor %}
+        <br>
+        <button type="submit">Next</button>
     </form>
 </body>
 </html>
