@@ -10,7 +10,7 @@ basicConfig(level=DEBUG)
 class API:
 
     def __init__(self, url: str = None):
-        self.url = url or "http://python_server:8000"
+        self.url = url or "http://trivia_server:8000"
         # self.url = url or "http://127.0.0.1:8000"
         self.logger = getLogger("API")
 
