@@ -11,22 +11,22 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
-resource "docker_network" "test_network" {
-  name = "test_network_999"
+resource "docker_network" "proj_network" {
+  name = "proj_network"
 }
 
 # Pulls the image
-resource "docker_image" "flask-image" {
-  name = "flask_app:latest"
+resource "docker_image" "flask_app_image" {
+  name = "trivia_flask_app:latest"
 }
 
 # Create a container
-resource "docker_container" "flask-app" {
-  image = docker_image.flask-image.image_id
-  name  = "flask-app"
+resource "docker_container" "flask_app" {
+  image = docker_image.flask_app_image.image_id
+  name  = "trivia_app"
   
 networks_advanced {
-    name = docker_network.test_network.name
+    name = docker_network.proj_network.name
   }
 
   ports {
@@ -36,21 +36,21 @@ networks_advanced {
 }
 
 # Pulls the image
-resource "docker_image" "python-server-image" {
-  name = "py_server:latest"
+resource "docker_image" "server_image" {
+  name = "trivia_server:latest"
 }
 
 # Create a container
-resource "docker_container" "python_server" {
-  image = docker_image.python-server-image.image_id
-  name  = "python_server"
+resource "docker_container" "trivia_server" {
+  image = docker_image.server_image.image_id
+  name  = "trivia_server"
   
   networks_advanced {
-    name = docker_network.test_network.name
+    name = docker_network.proj_network.name
   }
 
     ports {
-    internal = "8000"
-    external = "8000"
+      internal = "8000"
+      external = "8000"
   }
 }
