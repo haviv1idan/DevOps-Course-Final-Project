@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: flask-service
+  namespace: proj-ns
+spec:
+  selector:
+    app: flask-app
+  ports:
+    - protocol: TCP
+      port: 59000
+      targetPort: 59000
+  type: ClusterIP
