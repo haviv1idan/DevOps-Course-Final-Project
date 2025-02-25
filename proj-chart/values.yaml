@@ -1,0 +1,14 @@
+replicaCount: 2
+namespace: proj-ns
+
+flaskApp:
+  name: flask-app
+  image: flask-app
+  tag: latest
+  port: 59000
+
+pythonServer:
+  name: python-server
+  image: py-server
+  tag: latest
+  port: 8000
