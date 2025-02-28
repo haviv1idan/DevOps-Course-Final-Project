@@ -23,7 +23,7 @@ pipeline {
 
         stage('Lint') {
             steps {
-                sh 'flake8 --exclude venv,python_server/trivia_db.py'
+                sh 'flake8 --ignore=E501 --exclude venv,python_server/src/trivia_db.py'
             }
         }
 

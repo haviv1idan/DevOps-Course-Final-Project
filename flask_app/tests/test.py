@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
-from flask_app.src.app import app, api  # Import both the Flask app and the API instance
+from flask_app.src.app import app, api
+
 
 class FlaskAppTestCase(unittest.TestCase):
     def setUp(self):
@@ -18,6 +19,7 @@ class FlaskAppTestCase(unittest.TestCase):
 
         # Ensure the mock method was called once
         mock_get_questions.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()
