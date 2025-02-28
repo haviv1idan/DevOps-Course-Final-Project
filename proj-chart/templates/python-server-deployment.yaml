@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.pythonServer.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.pythonServer.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.pythonServer.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.pythonServer.name }}
+    spec:
+      containers:
+        - name: {{ .Values.pythonServer.name }}-container
+          image: {{ .Values.pythonServer.image }}:{{ .Values.pythonServer.tag }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.pythonServer.port }}

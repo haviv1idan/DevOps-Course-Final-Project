@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: python-service
+  namespace: proj-ns
+spec:
+  selector:
+    app: python-server
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
