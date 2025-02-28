@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from server_api import API
+from flask_app.src.server_api import API
 from random import sample
 from logging import basicConfig, DEBUG, getLogger
 

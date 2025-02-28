@@ -16,12 +16,20 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh 'pip install flake8'
+                sh 'pip install -r flask_app/src/requirements.txt'
+                sh 'pip install -r python_server/src/requirements.txt'
             }
         }
 
         stage('Lint') {
             steps {
                 sh 'flake8 --exclude venv,python_server/trivia_db.py'
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                sh 'python3 -m unittest discover -s flask_app/tests -v'
             }
         }
     }
