@@ -65,7 +65,7 @@ def game():
         question=question_data,
         question_number=session['current_question'] + 1,
         total=len(session['questions'])
-        )
+    )
 
 
 @app.route('/result')
