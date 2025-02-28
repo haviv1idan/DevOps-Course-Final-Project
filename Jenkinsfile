@@ -67,6 +67,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent any 
             when {
                 anyOf {
                     branch 'main'
