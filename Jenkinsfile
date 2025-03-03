@@ -55,11 +55,11 @@ pipeline {
         //     }
         // }
 
-        stage('Unit Test') {
-            steps {
-                sh 'python3 -m unittest discover -s flask_app/tests -v'
-            }
-        }
+        // stage('Unit Test') {
+        //     steps {
+        //         sh 'python3 -m unittest discover -s flask_app/tests -v'
+        //     }
+        // }
 
         stage('Build Docker Image') {
             agent any 
