@@ -72,6 +72,7 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG} -f flask_app/src/Dockerfile ."
+                    sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG}-py -f python_server/src/Dockerfile ."
                 }
             }
         }
@@ -102,6 +103,7 @@ pipeline {
             steps {
                 script {
                     sh "docker push ${DOCKER_IMAGE}:${env.BUILD_TAG}"
+                    sh "docker push ${DOCKER_IMAGE}:${env.BUILD_TAG}-py"
                 }
             }
         }
