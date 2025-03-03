@@ -76,6 +76,8 @@ pipeline {
             steps {
                 script {
                     echo "Current directory: ${pwd()}"
+                    sh 'ls'
+                    sh 'ls -la'
                     sh "cd flask_app/src"
                     echo "Current directory after cd: ${pwd()}"
                     sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG} -f Dockerfile ."
