@@ -103,7 +103,7 @@ pipeline {
                 anyOf {
                     branch 'main'
                     branch 'develop'
-                    brabch 'checking_jenkins_build'
+                    branch 'checking_jenkins_build'
                 }
             }
             steps {
