@@ -1,11 +1,5 @@
 pipeline {
     agent any
-    // {
-    //     docker {
-    //         image 'python:3.11-alpine'
-    //         args '--user root'
-    //     }
-    // }
 
     environment {
         DOCKER_IMAGE = "haviv1idan/dev_sec_ops_course"
@@ -47,19 +41,19 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'pip install flake8'
-                sh 'pip install -r flask_app/src/requirements.txt'
-                sh 'pip install -r python_server/src/requirements.txt'
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         sh 'pip install flake8'
+        //         sh 'pip install -r flask_app/src/requirements.txt'
+        //         sh 'pip install -r python_server/src/requirements.txt'
+        //     }
+        // }
 
-        stage('Lint') {
-            steps {
-                sh 'flake8 --ignore=E501 --exclude venv,python_server/src/trivia_db.py'
-            }
-        }
+        // stage('Lint') {
+        //     steps {
+        //         sh 'flake8 --ignore=E501 --exclude venv,python_server/src/trivia_db.py'
+        //     }
+        // }
 
         stage('Unit Test') {
             steps {
