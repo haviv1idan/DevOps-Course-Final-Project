@@ -2,8 +2,8 @@ FROM python:3.11-alpine
 
 WORKDIR /app
 
-COPY . /app/
+COPY ./python_server/ /app/
 
-RUN pip install -r requirements.txt
+RUN pip install -r src/requirements.txt
 
-ENTRYPOINT ["fastapi", "dev", "main.py", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["fastapi", "dev", "main.py", "--port", "8000", "--host", "0.0.0.0"]
