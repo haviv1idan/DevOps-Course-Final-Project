@@ -67,6 +67,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent any 
             when {
                 anyOf {
                     branch 'main'
@@ -75,7 +76,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'cd flask_app/src'
+                    sh "cd flask_app/src"
                     sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG} -f Dockerfile ."
                 }
             }
