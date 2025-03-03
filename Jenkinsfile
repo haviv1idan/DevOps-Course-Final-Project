@@ -1,10 +1,11 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-alpine'
-            args '--user root'
-        }
-    }
+    agent any
+    // {
+    //     docker {
+    //         image 'python:3.11-alpine'
+    //         args '--user root'
+    //     }
+    // }
 
     environment {
         DOCKER_IMAGE = "haviv1idan/dev_sec_ops_course"
