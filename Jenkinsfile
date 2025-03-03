@@ -35,6 +35,8 @@ pipeline {
                         env.BUILD_TAG = "Main-flask-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
                     } else if (env.BRANCH_NAME == 'develop') {
                         env.BUILD_TAG = "Dev-flask-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
+                    } else {
+                        env.BUILD_TAG = "Test-flask-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
                     }
                     echo "Using Build Tag: ${env.BUILD_TAG}"
                 }
@@ -67,11 +69,14 @@ pipeline {
                 anyOf {
                     branch 'main'
                     branch 'develop'
+                    brabch 'checking_jenkins_build'
                 }
             }
             steps {
                 script {
+                    echo "Current directory: ${pwd()}"
                     sh "cd flask_app/src"
+                    echo "Current directory after cd: ${pwd()}"
                     sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG} -f Dockerfile ."
                 }
             }
@@ -82,6 +87,7 @@ pipeline {
                 anyOf {
                     branch 'main'
                     branch 'develop'
+                    brabch 'checking_jenkins_build'
                 }
             }
             steps {
@@ -96,6 +102,7 @@ pipeline {
                 anyOf {
                     branch 'main'
                     branch 'develop'
+                    brabch 'checking_jenkins_build'
                 }
             }
             steps {
