@@ -75,10 +75,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh """
-                    cd flask_app/src
-                    docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG} -f Dockerfile .
-                    """
+                    sh 'cd flask_app/src'
+                    sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG} -f Dockerfile ."
                 }
             }
         }
