@@ -6,4 +6,4 @@ COPY . /app/
 
 RUN pip install -r python_server/src/requirements.txt
 
-ENTRYPOINT ["fastapi", "dev", "main.py", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["fastapi", "dev", "main.py", "--port", "8000", "--host", "0.0.0.0"]

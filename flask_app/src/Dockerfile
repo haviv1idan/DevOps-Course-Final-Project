@@ -6,4 +6,4 @@ COPY . /app/
 
 RUN pip install -r flask_app/src/requirements.txt
 
-ENTRYPOINT ["python", "app.py"]
+CMD ["python", "app.py"]

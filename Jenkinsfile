@@ -88,6 +88,7 @@ pipeline {
             steps {
                 script {
                     sh "docker run -d --rm -p 5000:5000 ${DOCKER_IMAGE}:${env.BUILD_TAG}"
+                    sh "docker run -d --rm -p 5000:5000 ${DOCKER_IMAGE}:${env.BUILD_TAG}-py"
                 }
             }
         }
