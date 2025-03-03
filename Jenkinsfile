@@ -1,114 +1,113 @@
 pipeline {
     agent any
-    // {
-    //     docker {
-    //         image 'python:3.11-alpine'
-    //         args '--user root'
-    //     }
-    // }
 
     environment {
-        DOCKER_IMAGE = "haviv1idan/dev_sec_ops_course"
+        REPOSITORY = "haviv1idan/dev_sec_ops_course"
+        APP_IMAGE_NAME = 'flask_app'
+        APP_CONTAINER_NAME = 'flask_app'
+        SERVER_IMAGE_NAME = 'python_server'
+        SERVER_CONTAINER_NAME = 'python_server'
     }
 
     stages {
-        stage('Checkout Repository') {
+
+        stage ('Checkout Code') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Unit Test') {
+            agent {
+                docker {
+                    image 'python:3.11-alpine'
+                    args '--user root'
+                }
+            }
+            steps {
+                script {
+                    echo "Running tests inside a Docker container..."
+                    sh 'pip install -r flask_app/src/requirements.txt'
+                    sh 'python3 -m unittest discover -s flask_app/tests -v'
+                }
             }
         }
 
         stage('Read Version from File') {
             steps {
                 script {
-                    def version = sh(script: "cat flask_app/src/version.txt", returnStdout: true).trim()
-                    env.APP_VERSION = version
-                    echo "Version: ${env.APP_VERSION}"
+                    def flask_version = sh(script: "cat flask_app/src/version.txt", returnStdout: true).trim()
+                    env.APP_VERSION = flask_version
+                    echo "Flask Version: ${env.APP_VERSION}"
+
+                    def server_version = sh(script: "cat python_server/src/version.txt", returnStdout: true).trim()
+                    env.SERVER_VERSION = server_version
+                    echo "Python Server Version: ${env.SERVER_VERSION}"
                 }
             }
         }
 
         stage('Set Build Tag') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'develop'
-                }
-            }
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        env.BUILD_TAG = "Main-flask-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
+                        env.SERVER_BUILD_TAG = "main-server-${env.SERVER_VERSION}-${env.BUILD_NUMBER}"
+                        env.APP_BUILD_TAG = "main-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
                     } else if (env.BRANCH_NAME == 'develop') {
-                        env.BUILD_TAG = "Dev-flask-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
+                        env.SERVER_BUILD_TAG = "dev-server-${env.SERVER_VERSION}-${env.BUILD_NUMBER}"
+                        env.APP_BUILD_TAG = "dev-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
+                    } else {
+                        env.SERVER_BUILD_TAG = "test-server-${env.SERVER_VERSION}-${env.BUILD_NUMBER}"
+                        env.APP_BUILD_TAG = "test-app-${env.APP_VERSION}-${env.BUILD_NUMBER}"
                     }
-                    echo "Using Build Tag: ${env.BUILD_TAG}"
+                    echo "Using Build Tag: ${env.APP_BUILD_TAG}"
+                    echo "Using Build Tag: ${env.SERVER_BUILD_TAG}"
                 }
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'pip install flake8'
-                sh 'pip install -r flask_app/src/requirements.txt'
-                sh 'pip install -r python_server/src/requirements.txt'
+        stage ('Build Docker Image') { 
+            steps { 
+                sh "docker build -t ${REPOSITORY}:${env.APP_BUILD_TAG} -f flask_app/Dockerfile ."
+                sh "docker build -t ${REPOSITORY}:${env.SERVER_BUILD_TAG} -f python_server/src/Dockerfile ."
             }
         }
 
-        stage('Lint') {
+        stage ('Run Docker Container') {
             steps {
-                sh 'flake8 --ignore=E501 --exclude venv,python_server/src/trivia_db.py'
+                sh "docker run -d -p 8000:8000 --name ${SERVER_CONTAINER_NAME}-${env.BUILD_NUMBER} ${REPOSITORY}:${env.SERVER_BUILD_TAG}"
+                sh "docker run -d -p 59000:59000 --name ${APP_CONTAINER_NAME}-${env.BUILD_NUMBER} ${REPOSITORY}:${env.APP_BUILD_TAG}"
             }
         }
 
-        stage('Unit Test') {
+        stage ('Test') {
             steps {
-                sh 'python3 -m unittest discover -s flask_app/tests -v'
+                sh "docker exec ${APP_CONTAINER_NAME}-${env.BUILD_NUMBER} python -m unittest flask_app/tests/test.py"
             }
         }
 
-        stage('Build Docker Image') {
-            agent any 
+        stage ('Push Docker Image') {
             when {
                 anyOf {
                     branch 'main'
                     branch 'develop'
+                    branch 'fix/jenkinsfile'
                 }
             }
             steps {
-                script {
-                    sh "cd flask_app/src"
-                    sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_TAG} -f Dockerfile ."
-                }
+                sh "docker push ${REPOSITORY}:${env.APP_BUILD_TAG}"
+                sh "docker push ${REPOSITORY}:${env.SERVER_BUILD_TAG}"
             }
         }
 
-        stage('Run Docker Container') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'develop'
-                }
-            }
+        stage ('Teardown') {
             steps {
-                script {
-                    sh "docker run -d --rm -p 5000:5000 ${DOCKER_IMAGE}:${env.BUILD_TAG}"
-                }
-            }
-        }
+                sh "docker stop ${APP_CONTAINER_NAME} && docker rm ${APP_CONTAINER_NAME}"
+                sh "docker rmi ${REPOSITORY}:${env.APP_BUILD_TAG}"
 
-        stage('Push to DockerHub') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'develop'
-                }
-            }
-            steps {
-                script {
-                    sh "docker push ${DOCKER_IMAGE}:${env.BUILD_TAG}"
-                }
+                sh "docker stop ${SERVER_COTNAINER_NAME} && docker rm ${SERVER_COTNAINER_NAME}"
+                sh "docker rmi ${REPOSITORY}:${env.SERVER_BUILD_TAG}"
             }
         }
-    }
+    }    
 }
