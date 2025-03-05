@@ -5,7 +5,7 @@ pipeline {
             steps {
                 echo 'Hello World'
                 echo 'Hello World Test'
-                echo 'David Hagever'
+                echo 'David Hagever 2'
             }
         }
     }
