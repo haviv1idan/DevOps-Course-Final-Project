@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        DOCKER_CREDENTIALS = credentials('docker')
         REPOSITORY = "haviv1idan/dev_sec_ops_course"
         APP_IMAGE_NAME = 'flask_app'
         APP_CONTAINER_NAME = 'flask_app'
@@ -27,7 +28,7 @@ pipeline {
             steps {
                 script {
                     echo "Running tests inside a Docker container..."
-                    sh 'pip install -r flask_app/src/requirements.txt'
+                    sh 'pip install --no-cache-dir -r flask_app/src/requirements.txt'
                     sh 'python3 -m unittest discover -s flask_app/tests -v'
                 }
             }
@@ -82,7 +83,17 @@ pipeline {
 
         stage ('Test') {
             steps {
-                sh "docker exec ${APP_CONTAINER_NAME}-${env.BUILD_NUMBER} python -m unittest flask_app/tests/test.py"
+                sh "docker exec ${APP_CONTAINER_NAME}-${env.BUILD_NUMBER} python3 -m unittest discover -s flask_app/tests -v"
+            }
+        }
+
+        stage ('Login to Docker Hub') {
+            steps {
+                script {
+                    withDockerRegistry([credentialsId: 'docker', url: 'https://index.docker.io/v1/']) {
+                        echo 'Logged in to Docker Hub'
+                    }
+                }
             }
         }
 
@@ -102,10 +113,10 @@ pipeline {
 
         stage ('Teardown') {
             steps {
-                sh "docker stop ${APP_CONTAINER_NAME} && docker rm ${APP_CONTAINER_NAME}"
+                sh "docker stop ${APP_CONTAINER_NAME}-${env.BUILD_NUMBER} && docker rm ${APP_CONTAINER_NAME}-${env.BUILD_NUMBER}"
                 sh "docker rmi ${REPOSITORY}:${env.APP_BUILD_TAG}"
 
-                sh "docker stop ${SERVER_COTNAINER_NAME} && docker rm ${SERVER_COTNAINER_NAME}"
+                sh "docker stop ${SERVER_CONTAINER_NAME}-${env.BUILD_NUMBER} && docker rm ${SERVER_CONTAINER_NAME}-${env.BUILD_NUMBER}"
                 sh "docker rmi ${REPOSITORY}:${env.SERVER_BUILD_TAG}"
             }
         }
