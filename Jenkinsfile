@@ -92,7 +92,6 @@ pipeline {
                 anyOf {
                     branch 'main'
                     branch 'develop'
-                    branch 'improve/jenkinsfile'
                 }
             }
             steps {
