@@ -87,27 +87,22 @@ pipeline {
             }
         }
 
-        stage ('Login to Docker Hub') {
-            steps {
-                script {
-                    withDockerRegistry([credentialsId: 'docker', url: 'https://index.docker.io/v1/']) {
-                        echo 'Logged in to Docker Hub'
-                    }
-                }
-            }
-        }
-
-        stage ('Push Docker Image') {
+        stage ('Login and Push Docker Images') {
             when {
                 anyOf {
                     branch 'main'
                     branch 'develop'
-                    branch 'fix/jenkinsfile'
                 }
             }
             steps {
-                sh "docker push ${REPOSITORY}:${env.APP_BUILD_TAG}"
-                sh "docker push ${REPOSITORY}:${env.SERVER_BUILD_TAG}"
+                script {
+                    withDockerRegistry([credentialsId: 'docker', url: 'https://index.docker.io/v1/']) {
+                        echo 'Logged in to Docker Hub'
+                        sh "docker push ${REPOSITORY}:${env.APP_BUILD_TAG}"
+                        sh "docker push ${REPOSITORY}:${env.SERVER_BUILD_TAG}"
+
+                    }
+                }
             }
         }
 
