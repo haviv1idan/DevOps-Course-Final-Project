@@ -18,6 +18,6 @@ spec:
       containers:
         - name: {{ .Values.flaskApp.name }}-container
           image: {{ .Values.flaskApp.image }}:{{ .Values.flaskApp.tag }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.flaskApp.port }}

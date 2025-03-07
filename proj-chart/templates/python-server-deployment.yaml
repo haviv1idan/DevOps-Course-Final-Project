@@ -18,6 +18,6 @@ spec:
       containers:
         - name: {{ .Values.pythonServer.name }}-container
           image: {{ .Values.pythonServer.image }}:{{ .Values.pythonServer.tag }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.pythonServer.port }}

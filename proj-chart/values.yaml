@@ -3,12 +3,12 @@ namespace: proj-ns
 
 flaskApp:
   name: flask-app
-  image: flask-app
-  tag: latest
+  image: haviv1idan/dev_sec_ops_course
+  tag: dev-app-0.0.4-18
   port: 59000
 
 pythonServer:
   name: python-server
-  image: py-server
-  tag: latest
+  image: haviv1idan/dev_sec_ops_course
+  tag: dev-server-0.0.1-18
   port: 8000
