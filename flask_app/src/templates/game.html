@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Trivia Game</title>
+</head>
+<body>
+    <h1>Question {{ question_number }} of {{ total }}</h1>
+    <form action="/game" method="post">
+        <p>{{ question.question }}</p>
+        {% for option in question.options %}
+            <input type="radio" name="answer" value="{{ option }}" required> {{ option }}<br>
+        {% endfor %}
+        <br>
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>
